@@ -9,6 +9,21 @@ function isEven(number) {
 isEven(20);
 isEven(9);
 
+// const isEven2 = (number) => {
+//   //   return number % 2 === 0 ? "Even" : "Odd";
+//   if (number % 2) {
+//     return "Even";
+//   } else {
+//     return "Odd";
+//   }
+// };
+
+// const result1 = isEven2(20);
+// const result2 = isEven2(9);
+
+// console.log(result1);
+// console.log(result2);
+
 //2
 
 function checkAge(age) {
