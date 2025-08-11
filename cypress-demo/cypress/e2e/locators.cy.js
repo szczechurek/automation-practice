@@ -39,3 +39,51 @@ describe("Types of locators", () => {
       .click();
   });
 });
+
+it("save subject of the command", () => {
+  cy.visit("/");
+  cy.contains("Forms").click();
+  cy.contains("Form Layouts").click();
+  cy.contains("nb-card", "Using the Grid")
+    .find('[for="inputEmail1"]')
+    .should("contain", "Email");
+  cy.contains("nb-card", "Using the Grid")
+    .find('[for="inputPassword2"]')
+    .should("contain", "Password");
+});
+
+it("extract text value", () => {
+  cy.visit("/");
+  cy.contains("Forms").click();
+  cy.contains("Form Layouts").click();
+
+  //1
+  cy.get('[for="exampleInputEmail1"]').should("contain", "Email adress");
+
+  //2
+  cy.get('[for="exampleInputEmail1"]').then((label) => {
+    const labelText = label.text();
+    expect(labelText).to.equal("Email adress");
+    cy.wrap(labelText).should("contain", "Email adress");
+  });
+
+  //3
+  cy.get('[for="exampleInputEmail1"]')
+    .invoke("text")
+    .then((text) => {
+      expect(text).to.equal("Email adress");
+    });
+
+  //4
+  cy.get('[for="exampleInputEmail1"]')
+    .invoke("attr", "class")
+    .then((classValue) => {
+      expect(classValue).to.equal("label");
+    });
+
+  //5 invoke property
+  cy.get("#exampleInputEmail1").type("test@test.com");
+  cy.get("#exampleInputEmail1")
+    .invoke("prop", "value")
+    .should("contain", "test@test.com");
+});
