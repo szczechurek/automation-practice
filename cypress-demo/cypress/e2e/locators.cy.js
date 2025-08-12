@@ -86,4 +86,69 @@ it("extract text value", () => {
   cy.get("#exampleInputEmail1")
     .invoke("prop", "value")
     .should("contain", "test@test.com");
+
+  it("radio buttons", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Form Layouts").click();
+
+    cy.contains("nb-card", "Using the Grid")
+      .find('[type="radio"]')
+      .then((radioButtons) => {
+        cy.wrap(radioButtons).eq(0).check({ force: true }).should("be.checked");
+        cy.wrap(radioButtons).eq(1).check({ force: true });
+        cy.wrap(radioButtons).eq(0).should("not.be.checked");
+        cy.wrap(radioButtons).eq(2).should("be.disabled");
+      });
+  });
+
+  it("checkboxes", () => {
+    cy.visit("/");
+    cy.contains("Modal & Overlays").click();
+    cy.contains("Toastr").click();
+
+    cy.get('[type="checkbox"]').check({ force: true });
+  });
+
+  it("Date picker", () => {
+    cy.visit("/");
+    cy.contains("Forms").click();
+    cy.contains("Datepicker").click();
+
+    let date = new Date();
+    date.setDate(getDate() + 5);
+    let futureDate = date.getDate();
+    let dateToAssert = `Sep ${futureDate}, 2023`;
+
+    cy.contains("nb-card", "Common Datepicker")
+      .find("input")
+      .then((input) => {
+        cy.wrap(input).click();
+        cy.get(".day-cell").not(".bounding-month").contains("21").click();
+        cy.wrap(input).invoke("prop", "value").should("contain", dateToAssert);
+        cy.wrap(input).should("have.value", dateToAssert);
+      });
+  });
+
+  it("Lists and dropdowns", () => {
+    cy.visit("/");
+
+    //1
+    cy.get("nav nb-select").click();
+    cy.get(".option-list").contains("Dark").click;
+    cy.get("nav nb-select").should("contain", "Dark");
+
+    //2
+    cy.get("nav nb-select").then((dropDown) => {
+      cy.wrap(dropDown).click();
+      cy.get(".option-list nb-option").each((listItem, index) => {
+        const itemText = listItem.text().trim();
+        cy.wrap(listItem).click();
+        cy.wrap(dropDown).should("contain", itemText);
+        if (index < 3) {
+          cy.wrap(dropDown).click();
+        }
+      });
+    });
+  });
 });
